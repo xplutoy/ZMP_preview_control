@@ -2,7 +2,7 @@
 # the repository of this code is: https://github.com/chauby/ZMP_preview_control.git
 
 
-#%% Initialize global variations
+# %% Initialize global variations
 import numpy as np
 from control.matlab import dare # for solving the discrete algebraic Riccati equation
 
@@ -53,7 +53,6 @@ def calculatePreviewControlParams2(A, B, C, Q, R, N):
     return Ks, Kx, G
 
 
-
 # %% demo
 if __name__ == '__main__':
     step_pos = np.array([[0, 0.0],
@@ -87,13 +86,10 @@ if __name__ == '__main__':
         if (t != 0) and (t%t_step < 1e-6):
             i += 1
 
-
     # Define basic matrix
-    A = np.mat(([1, dt, dt**2/2],
-                [0, 1, dt],
-                [0, 0, 1]))
-    B = np.mat((dt**3/6, dt**2/2, dt)).T
-    C = np.mat((1, 0, -z_c/g))
+    A = np.asmatrix(([1, dt, dt**2 / 2], [0, 1, dt], [0, 0, 1]))
+    B = np.asmatrix((dt**3 / 6, dt**2 / 2, dt)).T
+    C = np.asmatrix((1, 0, -z_c / g))
 
     Q = 1
     R = 1e-6
@@ -103,7 +99,6 @@ if __name__ == '__main__':
 
     # Calculate Improved Preview control parameters
     Ks, Kx, G = calculatePreviewControlParams2(A, B, C, Q, R, N_preview)
-
 
     # ------------------------------- for Preview Control
     ux_1 = np.asmatrix(np.zeros((N_simulation, 1)))
@@ -132,7 +127,6 @@ if __name__ == '__main__':
     e_x_2 = np.zeros((N_simulation, 1))
     e_y_2 = np.zeros((N_simulation, 1))
 
-
     # ------------------------------- for Improved Preview Control 2
     ux_3 = np.asmatrix(np.zeros((N_simulation, 1)))
     uy_3 = np.asmatrix(np.zeros((N_simulation, 1)))
@@ -150,7 +144,6 @@ if __name__ == '__main__':
 
     sum_e_x = 0
     sum_e_y = 0
-
 
     # main loop
     for k in range(N_simulation):
@@ -173,7 +166,6 @@ if __name__ == '__main__':
         COM_y_1[:,k+1] = A*COM_y_1[:, k] + B*uy_1[k]
         COM_x_record_1.append(COM_x_1[0,k])
         COM_y_record_1.append(COM_y_1[0,k])
-
 
         # -------------------------------- 2: Improved Preview Control with only current error
         # update ZMP
@@ -204,7 +196,7 @@ if __name__ == '__main__':
         ZMP_y_record_3.append(ZMP_y[0,0])
 
         # calculate errors
-        e_x_3[k] = ZMP_x - ZMP_x_ref[k] 
+        e_x_3[k] = ZMP_x - ZMP_x_ref[k]
         e_y_3[k] = ZMP_y - ZMP_y_ref[k]
         sum_e_x += e_x_3[k]
         sum_e_y += e_y_3[k]
@@ -218,7 +210,6 @@ if __name__ == '__main__':
         COM_y_3[:,k+1] = A*COM_y_3[:, k] + B*uy_3[k]
         COM_x_record_3.append(COM_x_3[0,k])
         COM_y_record_3.append(COM_y_3[0,k])
-
 
     # plot
     import matplotlib.pyplot as plt
